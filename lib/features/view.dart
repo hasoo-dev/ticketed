@@ -1,0 +1,6 @@
+export 'splash/splash_view.dart';
+export 'auth/auth_view.dart';
+export 'auth/sign_up_view.dart';
+export 'trade_type/trade_view.dart';
+export 'home/home_view.dart';
+export 'forget_screen/forget_password_view.dart';
