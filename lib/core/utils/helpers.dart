@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ticketed/core/constant/app_button.dart';
+import 'package:ticketed/core/routes/routes_name.dart';
 
 import '../extensions/int_extension.dart';
 import '../extensions/theme_extensions.dart';
@@ -86,8 +89,9 @@ class Helpers {
   }) {
     return showModalBottomSheet(
       context: context,
-      isDismissible: false,
+      isDismissible: true,
       enableDrag: false,
+      showDragHandle: false,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) {
@@ -100,6 +104,8 @@ class Helpers {
           child: SafeArea(
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: .start,
+              crossAxisAlignment: .center,
               children: [
                 CircleAvatar(
                   radius: 40,
@@ -125,17 +131,14 @@ class Helpers {
                     height: 1.5,
                   ),
                 ),
-                const SizedBox(height: 30),
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: FilledButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      onContinue?.call();
-                    },
-                    child: const Text("Continue"),
-                  ),
+                12.vSpace,
+                AppButton(
+                  onPressed: () {
+                    context.go(RoutesName.main);
+                  },
+                  text: "Continue",
+                  backgroundColor: AppColors.darkBorder,
+                  textColor: Colors.white,
                 ),
               ],
             ),

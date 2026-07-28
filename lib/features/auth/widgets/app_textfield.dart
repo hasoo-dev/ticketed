@@ -43,8 +43,8 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: context.height * 0.087,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxHeight: 88),
       child: TextFormField(
         controller: controller,
         validator: validator,
@@ -66,8 +66,7 @@ class AppTextField extends StatelessWidget {
 
         textInputAction: textInputAction,
         decoration: InputDecoration(
-          constraints: const BoxConstraints(minHeight: 47),
-          // contentPadding: EdgeInsets.symmetric(horizontal: 19,vertical: 18),
+          
           hintText: hintText,
           hintStyle: context.text.titleLarge?.copyWith(
             fontSize: 14.sp,

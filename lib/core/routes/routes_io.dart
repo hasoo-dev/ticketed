@@ -33,9 +33,9 @@ class RoutesIo {
             _buildPage(context, state, const TradeView()),
       ),
       GoRoute(
-        path: RoutesName.home,
+        path: RoutesName.main,
         pageBuilder: (context, state) =>
-            _buildPage(context, state, const HomeView()),
+            _buildPage(context, state, const MainView()),
       ),
     ],
   );

@@ -17,16 +17,12 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
     return Scaffold(
         appBar: AppBar(
         automaticallyImplyLeading: false,
-        leadingWidth: 62,
+    
         leading: GestureDetector(
           onTap: () => context.pop(),
-          child: Card(
-            elevation: 3,
-            margin: EdgeInsets.only(left: 8, right: 16, top: 10, bottom: 10),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 6.0),
-              child: Icon(Icons.arrow_back_ios),
-            ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 6.0),
+            child: Icon(Icons.arrow_back_ios),
           ),
         ),
       ),

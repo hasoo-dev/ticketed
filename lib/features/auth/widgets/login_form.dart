@@ -24,17 +24,6 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final signInService = SignInService();
-  bool _isLoading = false;
-
-  Future<void> _handleLogin() async {
-    await signInService.login(
-      context,
-      onLoadingChanged: (value) {
-        if (!mounted) return;
-        setState(() => _isLoading = value);
-      },
-    );
-  }
 
   @override
   void dispose() {
@@ -69,12 +58,13 @@ class _LoginFormState extends State<LoginForm> {
                 ),
                 7.vSpace,
                 AppTextField(
+                  
                   controller: signInService.emailController,
                   prefixIcon: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SvgPicture.asset('assets/icons/ic_email.svg'),
                   ),
-                  hintText: "Enter the E-mail",
+                  hintText: "name@company.com",
                   validator: (p0) => Validators.email(p0),
                 ),
 
@@ -94,11 +84,12 @@ class _LoginFormState extends State<LoginForm> {
                     padding: const EdgeInsets.all(8.0),
                     child: SvgPicture.asset('assets/icons/ic_password.svg'),
                   ),
-                  hintText: "Enter the Password",
+                  hintText: "*********",
+                  
                   validator: (value) => Validators.password(value),
                   obscureText: true,
                 ),
-
+12.vSpace,
                 Row(
                   mainAxisAlignment: .end,
                   crossAxisAlignment: .end,
@@ -118,9 +109,10 @@ class _LoginFormState extends State<LoginForm> {
 
                 // Login Button
                 AppButton(
-                  isLoading: _isLoading,
-                  onPressed: _isLoading ? null : _handleLogin,
-                  // isLoading: authState.isLoading,
+                  onPressed: () {
+                    signInService.login(context);
+                  },
+
                   text: 'SIGN IN',
                   textColor: Colors.white,
                   backgroundColor: context.colors.onSurface,
@@ -131,7 +123,7 @@ class _LoginFormState extends State<LoginForm> {
                 Row(
                   children: [
                     Expanded(child: Divider(endIndent: 12)),
-                    Text("or"),
+                    Text("or contniue with"),
                     Expanded(child: Divider(indent: 12)),
                   ],
                 ), // Notice Footer
@@ -144,7 +136,7 @@ class _LoginFormState extends State<LoginForm> {
                   crossAxisAlignment: .center,
                   children: [
                     Text(
-                      "If you don't have the account? ",
+                      "New Here? ",
                       style: context.text.headlineSmall!.copyWith(
                         fontSize: AppFonts.f16,
                       ),

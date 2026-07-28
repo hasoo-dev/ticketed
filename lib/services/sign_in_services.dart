@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ticketed/services/session_services.dart';
@@ -9,50 +11,54 @@ class SignInService {
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  Future<void> login(
-    BuildContext context, {
-    required ValueChanged<bool> onLoadingChanged,
-  }) async {
+  Future<void> login(BuildContext context) async {
+    // 1. Validate Form First
     if (!(formKey.currentState?.validate() ?? false)) return;
 
-    onLoadingChanged(true);
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
 
     try {
-      final email = emailController.text.trim();
-      final password = passwordController.text.trim();
+      // 2. Call Supabase Auth API
 
-      // TODO: replace with real API/Firebase call — this should return
-      // the user/session JSON your backend sends back on successful login.
-      await Future.delayed(const Duration(seconds: 1));
-      final fakeResponse = {
-        'id': 'usr_123',
-        'email': email,
-        'password':password,
-        'businessName': 'Riverside Electric',
-      };
+      // final response = await Supabase.instance.client.auth.signInWithPassword(
+      //   email: email,
+      //   password: password,
+      // );
 
-      // Persist the session. Without this, login "succeeds" but nothing
-      // survives app restart, and the splash screen's restoreSession()
-      // check will always fail right after a successful login.
-      await SessionService.instance.saveSession(fakeResponse);
-
+      // 3. Safety Check: Ensure the widget is still in the tree after async execution
       if (!context.mounted) return;
-      onLoadingChanged(false);
 
-      await Helpers.loginSuccess(
+      Helpers.loginSuccess(
         context: context,
         onContinue: () {
-          if (!context.mounted) return;
-          context.go(RoutesName.home);
+          context.go(RoutesName.main);
         },
       );
     } catch (e) {
-      debugPrint("Login Error: $e");
-      onLoadingChanged(false);
+      // 5. Catch unexpected generic errors (e.g., No internet connection)
       if (!context.mounted) return;
-      Helpers.showSnackBar(context, "Login failed. Please try again.", isError: true);
+      debugPrint("Login failed unexpectedly: $e");
+      Helpers.showSnackBar(
+        context,
+        "An unexpected error occurred. Please try again.",
+      );
     }
   }
+
+  // Future<void> login(BuildContext context) async {
+  //   if (!(formKey.currentState?.validate() ?? false)) return;
+  //   try {
+  //     final email = emailController.text.trim();
+  //     final password = passwordController.text.trim();
+  //     final success = {"email": email, "pasword": password};
+
+  //     Helpers.loginSuccess(context: context);
+  //   } catch (e) {
+  //     debugPrint("Lfoin failed $e");
+  //     Helpers.showSnackBar(context, "Login failed $e");
+  //   }
+  // }
 
   void dispose() {
     emailController.dispose();

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:ticketed/core/extensions/int_extension.dart';
 
 class ProgressDemo extends StatefulWidget {
   const ProgressDemo({super.key});
@@ -18,7 +20,7 @@ class _ProgressDemoState extends State<ProgressDemo>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 5),
+      duration: const Duration(seconds: 3),
     )..forward();
   }
 
@@ -36,23 +38,20 @@ class _ProgressDemoState extends State<ProgressDemo>
         return Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
-                 
-                vertical: 3,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 3),
               child: LinearPercentIndicator(
                 percent: _controller.value,
                 lineHeight: 15,
-                  width: MediaQuery.of(context).size.width - 174,
+                width: MediaQuery.of(context).size.width - 174,
                 barRadius: const Radius.circular(23),
-               backgroundColor: Colors.blueGrey.shade100,
-              progressColor: Colors.black87,
+                backgroundColor: Colors.blueGrey.shade100,
+                progressColor: Colors.black87,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              "${(_controller.value * 100).toInt()}..Loading",
-              style: Theme.of(context).textTheme.bodyMedium,
+              "${(_controller.value * 100).toInt()}%",
+              style: GoogleFonts.poppins(fontSize: 12.sp),
             ),
           ],
         );

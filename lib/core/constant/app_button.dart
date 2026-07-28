@@ -68,6 +68,7 @@ class AppButton extends StatelessWidget {
     }
     return Text(
       text,
+      textAlign: TextAlign.center,
       style: context.text.titleMedium?.copyWith(
         fontSize: textSize,
         fontWeight: FontWeight.w800,

@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:ticketed/core/constant/app_button.dart';
+import 'package:ticketed/core/constant/app_fonts.dart';
 import 'package:ticketed/core/extensions/context_extension.dart';
 import 'package:ticketed/core/extensions/int_extension.dart';
 import 'package:ticketed/core/extensions/theme_extensions.dart';
-import 'package:ticketed/features/home/widgets/lead_model.dart';
+import 'package:ticketed/features/auth/widgets/app_textfield.dart';
 
+import '../../core/theme/app_colors.dart';
 import 'widgets/lead_card.dart';
+import 'widgets/lead_model.dart';
 
-class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+class ClientsView extends StatefulWidget {
+  const ClientsView({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  State<ClientsView> createState() => _ClientsViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _ClientsViewState extends State<ClientsView> {
+  final clientsCard = [
+    {"title": "Active Clients", "number": "134", "color": Colors.brown},
+    {"title": "Avg. Qoute Vol.", "number": "\$4.2k", "color": Colors.brown},
+    {"title": "Retenstion Rate", "number": "92%", "color": Colors.green},
+    {"title": "total Qoutes", "number": "842", "color": Colors.brown},
+  ];
   final List<LeadModel> leads = [
     LeadModel(
       initials: "JD",
@@ -59,70 +69,54 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Ticketed", style: context.text.headlineMedium),
-
-        actions: [
-          CircleAvatar(
-            maxRadius: 33,
-            backgroundColor: Colors.white,
-            backgroundImage: AssetImage("assets/icons/ic_ticketed.png"),
-          ),
-        ],
-        actionsPadding: EdgeInsets.only(right: 12),
-      ),
-
       backgroundColor: context.theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 21),
+          padding: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
           child: Column(
             mainAxisAlignment: .start,
             crossAxisAlignment: .start,
             children: [
-              Text("Hi,Apex Constrauction", style: context.text.headlineMedium),
+              Text("My Clients", style: context.text.displaySmall),
               Text(
-                "Ready for today's estimations.",
-                style: context.text.bodyLarge,
+                "Manage your professional network and historical job data. Search by name, project, or location.",
+                style: context.text.labelLarge!.copyWith(
+                  color: Colors.grey.shade600,
+                ),
               ),
               23.vSpace,
-              buidlQoutesContainer(
-                title: "PENDING QOUTES",
-                subtitle: "14",
-                branding: "+3 since yesterday",
-                icon: Icons.trending_up_sharp,
-                iconColor: Colors.brown,
-              ),
-              buidlQoutesContainer(
-                title: "ACCEPTED THIS MONTH",
-                subtitle: '\$14000'.toString(),
-                icon: Icons.check_circle_rounded,
-                iconColor: Colors.green,
-                branding: "Goal: \$35k reached by 81%",
-              ),
-              23.vSpace,
-              Row(
-                mainAxisAlignment: .spaceBetween,
+              AppButton(
+                text: "👨🏻‍💼 ADD NEW CLIENT",
 
-                children: [
-                  Text(
-                    "Recent Qoutes",
-                    style: context.text.bodyLarge!.copyWith(
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    "View All",
-                    style: context.text.bodyLarge!.copyWith(
-                      color: Colors.orangeAccent.shade700,
-                      fontSize: 17.sp,
-                      decoration: TextDecoration.underline,
-                      decorationColor: Colors.orangeAccent.shade700,
-                    ),
-                  ),
-                ],
+                backgroundColor: AppColors.darkBorder,
+                textColor: Colors.white,
               ),
+              23.vSpace,
+              AppTextField(
+                prefixIcon: Icon(Icons.search),
+                hintText: "Serach Clients...",
+              ),
+              23.vSpace,
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: clientsCard.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 2,
+                ),
+                itemBuilder: (context, index) {
+                  final clients = clientsCard[index];
+                  return buildClientsCard(
+                    title: clients["title"] as String,
+                    number: clients["number"] as String,
+                    numberColor: clients["color"] as Color,
+                  );
+                },
+              ),
+              23.vSpace,
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -138,6 +132,46 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  Widget buildClientsCard({
+    required String title,
+    required String number,
+    required Color numberColor,
+  }) {
+    return Container(
+      height: context.height * 0.12,
+      width: context.width * 0.27,
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        border: Border.all(width: 1.2, color: Colors.orange.shade100),
+      ),
+      child: Column(
+        mainAxisAlignment: .start,
+        crossAxisAlignment: .start,
+        children: [
+          Spacer(),
+          Text(
+            title,
+            style: context.text.bodyLarge!.copyWith(
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Spacer(flex: 2),
+          Text(
+            number,
+            style: context.text.bodyLarge!.copyWith(
+              color: numberColor,
+              fontWeight: FontWeight.w800,
+              fontSize: AppFonts.f20,
+            ),
+          ),
+          Spacer(),
+        ],
+      ),
+    );
+  }
+
   Widget buidlQoutesContainer({
     required String title,
     required String subtitle,
@@ -146,15 +180,13 @@ class _HomeViewState extends State<HomeView> {
     required Color iconColor,
   }) {
     return Container(
-      height: 145,
-      width: double.infinity,
-      // height: context.height * 0.2,
-      // width: context.width * 0.9,
+      height: context.height * 0.2,
+      width: context.width * 0.9,
       margin: EdgeInsets.symmetric(vertical: 6),
       padding: EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: Colors.white,
-    
+
         border: Border.all(width: 1.2, color: Colors.grey.shade300),
       ),
       child: Column(

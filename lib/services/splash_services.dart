@@ -8,7 +8,7 @@ import '../core/routes/routes_name.dart';
 
 class SplashServices {
   Future<void> navigateToMain(BuildContext context) async {
-    const splashDelay = Duration(seconds: 6);
+    const splashDelay = Duration(seconds: 4);
 
     try {
       await SessionService.instance.restoreSession();
@@ -16,7 +16,7 @@ class SplashServices {
 
       Timer(splashDelay, () {
         if (!context.mounted) return;
-        context.pushReplacement(isLoggedIn ? RoutesName.home : RoutesName.auth);
+        context.pushReplacement(isLoggedIn ? RoutesName.main : RoutesName.auth);
       });
     } catch (e) {
       Timer(splashDelay, () {
