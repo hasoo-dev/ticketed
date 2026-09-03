@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:ticketed/core/extensions/context_extension.dart';
-import 'package:ticketed/core/extensions/int_extension.dart';
-import 'package:ticketed/core/extensions/theme_extensions.dart';
-import 'package:ticketed/features/home/widgets/lead_model.dart';
-
-import 'widgets/lead_card.dart';
+import 'package:go_router/go_router.dart';
+import '../../core/extensions/int_extension.dart';
+import '../../core/extensions/theme_extensions.dart';
+import '../../core/routes/routes_name.dart';
+import '../../core/theme/app_colors.dart';
+import '../../services/quote_service.dart';
+import '../quotes/widgets/quote_card.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -14,123 +15,118 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final List<LeadModel> leads = [
-    LeadModel(
-      initials: "JD",
-      name: "John Doe",
-      service: "Kitchen Remodel",
-      status: "SENT",
-      price: "\$4,200",
-      statusColor: Colors.amber,
-      stripColor: Colors.amber,
-      avatarColor: const Color(0xffE6E8F8),
-    ),
-    LeadModel(
-      initials: "AS",
-      name: "Alice Smith",
-      service: "Exterior Painting",
-      status: "VIEWED",
-      price: "\$1,850",
-      statusColor: Colors.grey.shade300,
-      stripColor: Colors.grey.shade300,
-      avatarColor: const Color(0xffEEEEEE),
-    ),
-    LeadModel(
-      initials: "RT",
-      name: "Robert Taylor",
-      service: "Roof Repair",
-      status: "ACCEPTED",
-      price: "\$12,400",
-      statusColor: Colors.green.shade200,
-      stripColor: Colors.green,
-      avatarColor: const Color(0xff8FE3A9),
-    ),
-    LeadModel(
-      initials: "MM",
-      name: "Modern Mechanics",
-      service: "HVAC Maintenance",
-      status: "SENT",
-      price: "\$850",
-      statusColor: Colors.amber,
-      stripColor: Colors.amber,
-      avatarColor: const Color(0xffE6E8F8),
-    ),
-  ];
+  final QuoteService _quoteService = QuoteService();
+
+  @override
+  void initState() {
+    super.initState();
+    _quoteService.addListener(_onServiceUpdate);
+  }
+
+  @override
+  void dispose() {
+    _quoteService.removeListener(_onServiceUpdate);
+    super.dispose();
+  }
+
+  void _onServiceUpdate() {
+    if (mounted) setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    final recentQuotes = _quoteService.quotes.take(4).toList();
+    final pendingCount = _quoteService.pendingQuotesCount;
+    final acceptedSum = _quoteService.acceptedSumThisMonth;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Ticketed", style: context.text.headlineMedium),
-
-        actions: [
-          CircleAvatar(
-            maxRadius: 33,
-            backgroundColor: Colors.white,
-            backgroundImage: AssetImage("assets/icons/ic_ticketed.png"),
-          ),
-        ],
-        actionsPadding: EdgeInsets.only(right: 12),
-      ),
-
       backgroundColor: context.theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: Text("Ticketed", style: context.text.headlineMedium!.copyWith(fontWeight: FontWeight.bold)),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              context.push(RoutesName.settings);
+            },
+            child: const CircleAvatar(
+              maxRadius: 20,
+              backgroundColor: Colors.white,
+              backgroundImage: AssetImage("assets/images/ic_profile.webp"),
+            ),
+          ),
+          const SizedBox(width: 14),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 21),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
           child: Column(
-            mainAxisAlignment: .start,
-            crossAxisAlignment: .start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Hi,Apex Constrauction", style: context.text.headlineMedium),
               Text(
-                "Ready for today's estimations.",
-                style: context.text.bodyLarge,
+                "Hi, Apex Construction",
+                style: context.text.headlineMedium!.copyWith(fontWeight: FontWeight.bold),
               ),
-              23.vSpace,
-              buidlQoutesContainer(
-                title: "PENDING QOUTES",
-                subtitle: "14",
+              Text(
+                "Ready for today's industrial estimations.",
+                style: context.text.bodyLarge!.copyWith(color: Colors.grey.shade600),
+              ),
+              20.vSpace,
+              // Metric 1: Pending Quotes
+              _buildStatsContainer(
+                title: "PENDING QUOTES",
+                subtitle: "$pendingCount",
                 branding: "+3 since yesterday",
                 icon: Icons.trending_up_sharp,
-                iconColor: Colors.brown,
+                iconColor: const Color(0xffD97706),
               ),
-              buidlQoutesContainer(
+              12.vSpace,
+              // Metric 2: Accepted Volume
+              _buildStatsContainer(
                 title: "ACCEPTED THIS MONTH",
-                subtitle: '\$14000'.toString(),
+                subtitle: '\$${acceptedSum.toStringAsFixed(0)}',
                 icon: Icons.check_circle_rounded,
-                iconColor: Colors.green,
+                iconColor: const Color(0xff16A34A),
                 branding: "Goal: \$35k reached by 81%",
               ),
-              23.vSpace,
+              24.vSpace,
+              // Recent Quotes Header
               Row(
-                mainAxisAlignment: .spaceBetween,
-
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Recent Qoutes",
-                    style: context.text.bodyLarge!.copyWith(
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.w600,
+                  const Text(
+                    "Recent Estimates",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff181C1E),
                     ),
                   ),
-                  Text(
-                    "View All",
-                    style: context.text.bodyLarge!.copyWith(
-                      color: Colors.orangeAccent.shade700,
-                      fontSize: 17.sp,
-                      decoration: TextDecoration.underline,
-                      decorationColor: Colors.orangeAccent.shade700,
-                    ),
+                  TextButton(
+                    onPressed: () {
+                      context.push(RoutesName.newQuote);
+                    },
+                    child: const Text("+ New Quote"),
                   ),
                 ],
               ),
+              12.vSpace,
+              // Quote Cards List
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: leads.length,
+                itemCount: recentQuotes.length,
                 itemBuilder: (context, index) {
-                  return LeadCard(lead: leads[index]);
+                  final quote = recentQuotes[index];
+                  return QuoteCard(
+                    quote: quote,
+                    onTap: () {
+                      context.push(RoutesName.quotePreview, extra: quote);
+                    },
+                  );
                 },
               ),
+              24.vSpace,
             ],
           ),
         ),
@@ -138,7 +134,7 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget buidlQoutesContainer({
+  Widget _buildStatsContainer({
     required String title,
     required String subtitle,
     required IconData icon,
@@ -146,47 +142,57 @@ class _HomeViewState extends State<HomeView> {
     required Color iconColor,
   }) {
     return Container(
-      height: 145,
       width: double.infinity,
-      // height: context.height * 0.2,
-      // width: context.width * 0.9,
-      margin: EdgeInsets.symmetric(vertical: 6),
-      padding: EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.white,
-    
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(width: 1.2, color: Colors.grey.shade300),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
-        mainAxisAlignment: .start,
-        crossAxisAlignment: .start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Spacer(),
           Text(
             title,
-            style: context.text.headlineSmall!.copyWith(
-              color: Colors.brown.shade600,
-              letterSpacing: 2.0,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              letterSpacing: 1.5,
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
             ),
           ),
-          12.vSpace,
-          Text(subtitle.toString(), style: context.text.displayLarge),
-          Spacer(),
+          10.vSpace,
+          Text(
+            subtitle,
+            style: const TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.w900,
+              color: AppColors.darkBorder,
+            ),
+          ),
+          10.vSpace,
           Row(
-            spacing: 5,
             children: [
-              Icon(icon, color: iconColor),
+              Icon(icon, color: iconColor, size: 18),
+              6.hSpace,
               Text(
                 branding,
-                style: context.text.bodyLarge!.copyWith(
+                style: TextStyle(
                   color: iconColor,
+                  fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  letterSpacing: 3,
+                  letterSpacing: 0.5,
                 ),
               ),
             ],
           ),
-          Spacer(),
         ],
       ),
     );

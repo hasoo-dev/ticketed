@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ticketed/core/extensions/context_extension.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ticketed/core/extensions/theme_extensions.dart';
 import 'package:ticketed/features/auth/widgets/sign_up_form.dart';
 

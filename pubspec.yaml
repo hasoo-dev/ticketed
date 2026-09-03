@@ -46,6 +46,10 @@ dependencies:
   flutter_bloc:
   hydrated_bloc: 
   drift: ^2.34.2
+  drift_flutter: ^0.3.1
+  path_provider: ^2.1.6
+  path: ^1.9.1
+  logger: ^2.7.0
    
 
 dev_dependencies:
@@ -58,6 +62,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  drift_dev: ^2.34.5
+  build_runner: ^2.15.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -89,13 +95,12 @@ flutter:
   fonts:
     - family: san
       fonts:
-        - asset: assets/fonts/AlumniSans-Regular.ttf
-        - asset: assets/fonts/AlumniSans-Light.ttf
-        - asset: assets/fonts/AlumniSans-Medium.ttf
-        - asset: assets/fonts/AlumniSans-Bold.ttf
-        - asset: assets/fonts/AlumniSans-SemiBold.ttf
-        - asset: assets/fonts/AlumniSans-ExtraBold.ttf
-        - asset: assets/fonts/AlumniSans-Black.ttf
+        - asset: assets/fonts/SpaceGrotesk-Light.ttf
+        - asset: assets/fonts/SpaceGrotesk-Medium.ttf
+        - asset: assets/fonts/SpaceGrotesk-Bold.ttf
+        - asset: assets/fonts/SpaceGrotesk-Regular.ttf
+        - asset: assets/fonts/SpaceGrotesk-SemiBold.ttf
+        
 
   #         style: italic
   #   - family: Trajan Pro

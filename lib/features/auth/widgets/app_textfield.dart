@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ticketed/core/extensions/context_extension.dart';
-
 import '../../../core/constant/app_radius.dart';
 import '../../../core/extensions/int_extension.dart';
 import '../../../core/extensions/theme_extensions.dart';

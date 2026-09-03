@@ -1,9 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ticketed/services/session_services.dart';
 import '../core/routes/routes_name.dart';
+import '../core/utils/app_logger.dart';
 import '../core/utils/helpers.dart';
 
 class SignInService {
@@ -12,22 +11,23 @@ class SignInService {
   final formKey = GlobalKey<FormState>();
 
   Future<void> login(BuildContext context) async {
-    // 1. Validate Form First
     if (!(formKey.currentState?.validate() ?? false)) return;
 
     final email = emailController.text.trim();
-    final password = passwordController.text.trim();
+    AppLogger.i('Attempting sign in for: $email');
 
     try {
-      // 2. Call Supabase Auth API
+      await SessionService.instance.saveSession(
+        id: 'usr_${DateTime.now().millisecondsSinceEpoch}',
+        email: email.isNotEmpty ? email : 'contractor@apexindustrial.com',
+        name: 'Apex Contractor',
+        businessName: 'Apex Industrial Contracting',
+        trade: 'General Contractor',
+        accessToken: 'sec_tok_${DateTime.now().millisecondsSinceEpoch}',
+      );
 
-      // final response = await Supabase.instance.client.auth.signInWithPassword(
-      //   email: email,
-      //   password: password,
-      // );
-
-      // 3. Safety Check: Ensure the widget is still in the tree after async execution
       if (!context.mounted) return;
+      AppLogger.success('Sign in successful for: $email');
 
       Helpers.loginSuccess(
         context: context,
@@ -35,30 +35,15 @@ class SignInService {
           context.go(RoutesName.main);
         },
       );
-    } catch (e) {
-      // 5. Catch unexpected generic errors (e.g., No internet connection)
+    } catch (e, st) {
       if (!context.mounted) return;
-      debugPrint("Login failed unexpectedly: $e");
+      AppLogger.e('Login failed unexpectedly: $e', error: e, stackTrace: st);
       Helpers.showSnackBar(
         context,
         "An unexpected error occurred. Please try again.",
       );
     }
   }
-
-  // Future<void> login(BuildContext context) async {
-  //   if (!(formKey.currentState?.validate() ?? false)) return;
-  //   try {
-  //     final email = emailController.text.trim();
-  //     final password = passwordController.text.trim();
-  //     final success = {"email": email, "pasword": password};
-
-  //     Helpers.loginSuccess(context: context);
-  //   } catch (e) {
-  //     debugPrint("Lfoin failed $e");
-  //     Helpers.showSnackBar(context, "Login failed $e");
-  //   }
-  // }
 
   void dispose() {
     emailController.dispose();

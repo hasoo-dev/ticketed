@@ -2,12 +2,16 @@
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ticketed/app/ticketed.dart';
+import 'package:ticketed/core/utils/app_logger.dart';
+import 'package:ticketed/services/session_services.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  AppLogger.i('🚀 Starting Ticketed application...');
+  await SessionService.instance.restoreSession();
 
   // runApp(
-  //   DevicePreview(enabled: !kReleaseMode, builder: (context) => Ticketed()),
+  //   DevicePreview(enabled: !kReleaseMode, builder: (context) => const Ticketed()),
   // );
   runApp(Ticketed());
 }

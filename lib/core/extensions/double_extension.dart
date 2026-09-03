@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
 extension DoubleExtension on double {
@@ -20,14 +21,9 @@ extension DoubleExtension on double {
   EdgeInsets get paddingV => EdgeInsets.symmetric(vertical: this);
 
   /// Responsive fontSize: `16.0.sp`
-  double get sp =>
-      this *
-      (1.11 +
-          ((MediaQueryData.fromView(
-                        WidgetsBinding.instance.window,
-                      ).devicePixelRatio -
-                      3.65)
-                  .clamp(-0.5, 1.0) /
-              12.0));
-              
+  double get sp {
+    final view = PlatformDispatcher.instance.views.firstOrNull;
+    final pixelRatio = view != null ? MediaQueryData.fromView(view).devicePixelRatio : 3.0;
+    return this * (1.11 + ((pixelRatio - 3.65).clamp(-0.5, 1.0) / 12.0));
+  }
 }

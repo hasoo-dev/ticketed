@@ -26,14 +26,14 @@ class BrandTitle extends StatelessWidget {
           title,
           style: context.text.bodySmall!.copyWith(
             color: const Color(0xFF0F172A),
-            fontSize: AppFonts.f24,
+            fontSize: AppFonts.f20,
             fontWeight: FontWeight.bold,
           ),
         ),
         Text(
           subTitle,
           style: context.text.bodySmall!.copyWith(
-            fontSize: AppFonts.f18,
+            fontSize: AppFonts.f14,
             fontWeight: FontWeight.bold,
           ),
         ),

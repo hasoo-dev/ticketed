@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:ticketed/core/extensions/int_extension.dart';
 import '../../../core/extensions/theme_extensions.dart';
-import '../../../core/theme/app_colors.dart';
  
 
 class AppCheckbox extends StatelessWidget {
@@ -41,7 +40,9 @@ class AppCheckbox extends StatelessWidget {
               padding: const EdgeInsets.only(top: 1),
               child: Text(
                 text,
-                style: context.text.bodyMedium,
+                style: context.text.bodyMedium!.copyWith(
+                  fontSize: 10.sp
+                ),
               ),
             ),
           ),
